@@ -4,6 +4,8 @@ import { CropOverview } from "@/components/CropOverview";
 import { MarketPrices } from "@/components/MarketPrices";
 import { CropHealth } from "@/components/CropHealth";
 import { SoilMonitor } from "@/components/SoilMonitor";
+import { Navbar } from "@/components/Navbar";
+import { HeroSection } from "@/components/HeroSection";
 
 const Index = () => {
   // Sample data - in a real app, this would come from an API
@@ -30,13 +32,11 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white p-6">
-      <div className="mx-auto max-w-7xl space-y-8">
-        <header className="text-center">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">FarmGenius</h1>
-          <p className="text-gray-600">Your AI-Powered Farming Assistant</p>
-        </header>
-
+    <div className="min-h-screen">
+      <Navbar />
+      <HeroSection />
+      
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-12">
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           <WeatherCard {...weatherData} />
           <CropOverview {...cropData} />
