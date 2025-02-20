@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Upload, Camera, AlertTriangle } from "lucide-react";
 import { useState } from "react";
 import { analyzeImage } from "@/utils/imageAnalysis";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 
 interface HealthAlert {
   type: "warning" | "error" | "info";

@@ -5,7 +5,14 @@ import { pipeline, env } from '@huggingface/transformers';
 env.allowLocalModels = false;
 env.useBrowserCache = true;
 
-export const analyzeImage = async (imageUrl: string) => {
+interface HealthAlert {
+  type: "warning" | "error" | "info";
+  message: string;
+  recommendation: string;
+  confidence: number;
+}
+
+export const analyzeImage = async (imageUrl: string): Promise<HealthAlert[]> => {
   try {
     console.log('Starting image analysis...');
     
@@ -17,13 +24,13 @@ export const analyzeImage = async (imageUrl: string) => {
     // Analyze the image
     const results = await classifier(imageUrl);
     
-    // Map the results to health alerts
-    return results.map((result: any) => ({
+    // Map the results to health alerts with proper typing
+    return results.map((result: { label: string; score: number }) => ({
       type: result.score > 0.7 ? "error" : "warning",
       message: `Detected: ${result.label}`,
       recommendation: getRecommendation(result.label),
       confidence: result.score
-    }));
+    } as HealthAlert));
   } catch (error) {
     console.error('Error analyzing image:', error);
     throw error;
