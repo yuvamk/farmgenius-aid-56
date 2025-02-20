@@ -6,6 +6,7 @@ import { CropHealth } from "@/components/CropHealth";
 import { SoilMonitor } from "@/components/SoilMonitor";
 import { Navbar } from "@/components/Navbar";
 import { HeroSection } from "@/components/HeroSection";
+import { FeaturesSection } from "@/components/FeaturesSection";
 
 const Index = () => {
   // Sample data - in a real app, this would come from an API
@@ -35,12 +36,16 @@ const Index = () => {
     <div className="min-h-screen">
       <Navbar />
       <HeroSection />
+      <FeaturesSection />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-12">
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           <WeatherCard {...weatherData} />
           <CropOverview {...cropData} />
           <MarketPrices {...marketPrices} />
+        </div>
+
+        <div className="grid gap-6 md:grid-cols-2">
           <CropHealth />
           <SoilMonitor />
         </div>
