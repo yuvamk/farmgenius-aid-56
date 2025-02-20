@@ -12,6 +12,11 @@ interface HealthAlert {
   confidence: number;
 }
 
+type ImageClassificationResult = {
+  label: string;
+  score: number;
+}
+
 export const analyzeImage = async (imageUrl: string): Promise<HealthAlert[]> => {
   try {
     console.log('Starting image analysis...');
@@ -21,16 +26,16 @@ export const analyzeImage = async (imageUrl: string): Promise<HealthAlert[]> => 
       device: 'webgpu',
     });
     
-    // Analyze the image
-    const results = await classifier(imageUrl);
+    // Analyze the image and get the results
+    const results = await classifier(imageUrl) as ImageClassificationResult[];
     
     // Map the results to health alerts with proper typing
-    return results.map((result: { label: string; score: number }) => ({
+    return results.map((result) => ({
       type: result.score > 0.7 ? "error" : "warning",
       message: `Detected: ${result.label}`,
       recommendation: getRecommendation(result.label),
       confidence: result.score
-    } as HealthAlert));
+    }));
   } catch (error) {
     console.error('Error analyzing image:', error);
     throw error;
