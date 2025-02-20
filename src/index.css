@@ -35,16 +35,16 @@
 
   html {
     scroll-behavior: smooth;
+    @apply antialiased;
   }
 
   body {
     font-family: 'Inter', sans-serif;
-    @apply bg-background text-foreground antialiased;
+    @apply bg-background text-foreground;
   }
 }
 
 @layer components {
-  /* Interactive Elements */
   .interactive-hover {
     @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
   }
@@ -54,11 +54,10 @@
   }
 
   .tooltip-content {
-    @apply invisible absolute z-50 w-48 p-2 text-sm bg-background border rounded-md shadow-lg
+    @apply invisible absolute z-50 w-48 p-2 text-sm bg-background/95 backdrop-blur-sm border rounded-md shadow-lg
       opacity-0 transition-all duration-200 group-hover:visible group-hover:opacity-100;
   }
 
-  /* Loading Animations */
   .loading-spinner {
     @apply w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin;
   }
@@ -73,9 +72,8 @@
     animation: checkmark 0.3s ease-out forwards;
   }
 
-  /* Navigation Links */
   .nav-link {
-    @apply text-foreground/80 hover:text-primary transition-colors relative 
+    @apply text-gray-600 hover:text-primary transition-colors relative 
       after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 
       after:bottom-0 after:left-0 after:bg-primary after:origin-bottom-right 
       after:transition-transform after:duration-300 hover:after:scale-x-100 
@@ -97,7 +95,6 @@
 }
 
 @layer utilities {
-  /* Scroll Animations */
   .scroll-fade-in {
     opacity: 0;
     transform: translateY(20px);
@@ -131,5 +128,35 @@
       transform: scale(1);
       opacity: 1;
     }
+  }
+
+  @keyframes slideIn {
+    from {
+      transform: translateX(-100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  .animate-slideIn {
+    animation: slideIn 0.3s ease-out forwards;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fadeIn {
+    animation: fadeIn 0.3s ease-out forwards;
   }
 }
