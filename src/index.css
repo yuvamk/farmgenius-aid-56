@@ -65,68 +65,98 @@
   }
 }
 
-/* Interactive Elements */
-.interactive-hover {
-  @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
+@layer components {
+  /* Interactive Elements */
+  .interactive-hover {
+    @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
+  }
+
+  .tooltip-trigger {
+    @apply relative cursor-help;
+  }
+
+  .tooltip-content {
+    @apply invisible absolute z-50 w-48 p-2 text-sm bg-background border rounded-md shadow-lg
+      opacity-0 transition-all duration-200 group-hover:visible group-hover:opacity-100;
+  }
+
+  /* Loading Animations */
+  .loading-spinner {
+    @apply w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin;
+  }
+
+  .growing-plant {
+    @apply origin-bottom text-primary;
+    animation: grow 0.3s ease-out;
+  }
+
+  .checkmark-animation {
+    @apply text-green-500;
+    animation: checkmark 0.3s ease-out forwards;
+  }
+
+  /* Dark Mode Transition */
+  .dark-mode-transition {
+    @apply transition-colors duration-300;
+  }
+
+  /* Navigation Links */
+  .nav-link {
+    @apply text-foreground/80 hover:text-primary transition-colors relative 
+      after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 
+      after:bottom-0 after:left-0 after:bg-primary after:origin-bottom-right 
+      after:transition-transform after:duration-300 hover:after:scale-x-100 
+      hover:after:origin-bottom-left;
+  }
+
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    @apply w-2;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-secondary;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-primary/50 rounded-full hover:bg-primary/70;
+  }
 }
 
-.tooltip-trigger {
-  @apply relative cursor-help;
-}
+@layer utilities {
+  /* Scroll Animations */
+  .scroll-fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  }
 
-.tooltip-content {
-  @apply invisible absolute z-50 w-48 p-2 text-sm bg-background border rounded-md shadow-lg
-    opacity-0 transition-all duration-200 group-hover:visible group-hover:opacity-100;
-}
+  .scroll-fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
 
-/* Loading Animations */
-.loading-spinner {
-  @apply w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin;
-}
+  @keyframes grow {
+    from {
+      transform: scale(0);
+    }
+    to {
+      transform: scale(1);
+    }
+  }
 
-.growing-plant {
-  @apply origin-bottom animate-grow text-primary;
-}
-
-.checkmark-animation {
-  @apply animate-checkmark text-green-500;
-}
-
-/* Dark Mode Transition */
-.dark-mode-transition {
-  @apply transition-colors duration-300;
-}
-
-/* Scroll Animations */
-.scroll-fade-in {
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-}
-
-.scroll-fade-in.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* Navigation Links */
-.nav-link {
-  @apply text-foreground/80 hover:text-primary transition-colors relative 
-    after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 
-    after:bottom-0 after:left-0 after:bg-primary after:origin-bottom-right 
-    after:transition-transform after:duration-300 hover:after:scale-x-100 
-    hover:after:origin-bottom-left;
-}
-
-/* Custom Scrollbar */
-::-webkit-scrollbar {
-  @apply w-2;
-}
-
-::-webkit-scrollbar-track {
-  @apply bg-secondary;
-}
-
-::-webkit-scrollbar-thumb {
-  @apply bg-primary/50 rounded-full hover:bg-primary/70;
+  @keyframes checkmark {
+    0% {
+      transform: scale(0);
+      opacity: 0;
+    }
+    50% {
+      transform: scale(1.2);
+      opacity: 0.8;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
 }
