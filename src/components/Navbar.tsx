@@ -1,7 +1,7 @@
+
 import { useState } from "react";
-import { Menu, X, Sun, Moon, Search, Globe } from "lucide-react";
+import { Menu, X, Search, Globe } from "lucide-react";
 import { Button } from "./ui/button";
-import { useTheme } from "./ThemeProvider";
 import {
   Tooltip,
   TooltipContent,
@@ -13,12 +13,11 @@ export const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState('English');
-  const { theme, toggleTheme } = useTheme();
 
   const languages = ['English', 'Español', 'हिंदी', '中文'];
 
   return (
-    <nav className="fixed top-0 w-full bg-background/80 backdrop-blur-md z-50 border-b border-border dark-mode-transition">
+    <nav className="fixed top-0 w-full bg-background/80 backdrop-blur-md z-50 border-b border-border">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex-shrink-0 flex items-center">
@@ -97,7 +96,7 @@ export const Navbar = () => {
 
             <Button 
               variant="outline" 
-              className="hover:border-primary/20 hover:bg-primary/5 transition-colors"
+              className="hover:border-primary/20 hover:bg-primary/5"
             >
               Sign In
             </Button>
