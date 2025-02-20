@@ -7,6 +7,8 @@ import { SoilMonitor } from "@/components/SoilMonitor";
 import { Navbar } from "@/components/Navbar";
 import { HeroSection } from "@/components/HeroSection";
 import { FeaturesSection } from "@/components/FeaturesSection";
+import { SustainabilitySection } from "@/components/SustainabilitySection";
+import { Footer } from "@/components/Footer";
 
 const Index = () => {
   // Sample data - in a real app, this would come from an API
@@ -50,6 +52,9 @@ const Index = () => {
           <SoilMonitor />
         </div>
       </div>
+
+      <SustainabilitySection />
+      <Footer />
     </div>
   );
 };
