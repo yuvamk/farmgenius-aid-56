@@ -1,41 +1,59 @@
-
 import { useState } from "react";
 import { Menu, X, Sun, Moon, Search, Globe } from "lucide-react";
 import { Button } from "./ui/button";
+import { useTheme } from "./ThemeProvider";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "./ui/tooltip";
 
 export const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState('English');
+  const { theme, toggleTheme } = useTheme();
 
   const languages = ['English', 'Español', 'हिंदी', '中文'];
 
   return (
-    <nav className="fixed top-0 w-full bg-white/80 backdrop-blur-md z-50 border-b border-gray-100">
+    <nav className="fixed top-0 w-full bg-background/80 backdrop-blur-md z-50 border-b border-border dark-mode-transition">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          {/* Logo with hover animation */}
           <div className="flex-shrink-0 flex items-center">
             <h1 className="text-2xl font-bold text-primary transition-transform hover:scale-105 duration-300">
               FarmGenius
             </h1>
           </div>
 
-          {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-6">
-            <a href="#" className="nav-link">Home</a>
-            <a href="#features" className="nav-link">Features</a>
-            <a href="#weather" className="nav-link">Weather Forecast</a>
-            <a href="#disease" className="nav-link">Crop Disease</a>
-            <a href="#pests" className="nav-link">Pest Management</a>
-            <a href="#market" className="nav-link">Market Prices</a>
-            <a href="#sustainability" className="nav-link">Sustainability</a>
-            <a href="#contact" className="nav-link">Contact</a>
+            <TooltipProvider>
+              {[
+                { href: "#", label: "Home", tooltip: "Back to homepage" },
+                { href: "#features", label: "Features", tooltip: "Explore our features" },
+                { href: "#weather", label: "Weather Forecast", tooltip: "Check weather conditions" },
+                { href: "#disease", label: "Crop Disease", tooltip: "AI-powered disease detection" },
+                { href: "#pests", label: "Pest Management", tooltip: "Smart pest control" },
+                { href: "#market", label: "Market Prices", tooltip: "Real-time market data" },
+                { href: "#sustainability", label: "Sustainability", tooltip: "Eco-friendly practices" },
+                { href: "#contact", label: "Contact", tooltip: "Get in touch with us" },
+              ].map(({ href, label, tooltip }) => (
+                <Tooltip key={label}>
+                  <TooltipTrigger asChild>
+                    <a href={href} className="nav-link">
+                      {label}
+                    </a>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{tooltip}</p>
+                  </TooltipContent>
+                </Tooltip>
+              ))}
+            </TooltipProvider>
           </div>
 
-          {/* Right side buttons */}
           <div className="hidden md:flex items-center space-x-4">
-            {/* Language Selector */}
             <div className="relative group">
               <Button 
                 variant="ghost" 
@@ -59,7 +77,6 @@ export const Navbar = () => {
               </div>
             </div>
 
-            {/* Search Bar */}
             <div className="relative">
               {isSearchOpen && (
                 <input
@@ -78,7 +95,6 @@ export const Navbar = () => {
               </Button>
             </div>
 
-            {/* Auth Buttons */}
             <Button 
               variant="outline" 
               className="hover:border-primary/20 hover:bg-primary/5 transition-colors"
@@ -92,7 +108,6 @@ export const Navbar = () => {
             </Button>
           </div>
 
-          {/* Mobile menu button */}
           <div className="md:hidden">
             <Button
               variant="ghost"
@@ -106,7 +121,6 @@ export const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile menu */}
       {isMenuOpen && (
         <div className="md:hidden bg-white border-b border-gray-100 animate-slideIn">
           <div className="px-2 pt-2 pb-3 space-y-1">
@@ -119,7 +133,6 @@ export const Navbar = () => {
             <a href="#sustainability" className="mobile-nav-link">Sustainability</a>
             <a href="#contact" className="mobile-nav-link">Contact</a>
             
-            {/* Mobile Search */}
             <div className="px-3 py-2">
               <input
                 type="text"
@@ -128,7 +141,6 @@ export const Navbar = () => {
               />
             </div>
             
-            {/* Mobile Language Selector */}
             <div className="px-3 py-2">
               <select 
                 value={selectedLanguage}
