@@ -7,6 +7,9 @@ import { Upload, Camera, AlertTriangle } from "lucide-react";
 import { useState } from "react";
 import { analyzeImage } from "@/utils/imageAnalysis";
 import { useToast } from "@/hooks/use-toast";
+import { LoadingAnimation } from "@/components/ui/loading-animation";
+import { ProgressBar } from "@/components/ui/progress-bar";
+import { EnhancedTooltip } from "@/components/ui/enhanced-tooltip";
 
 interface HealthAlert {
   type: "warning" | "error" | "info";
@@ -20,6 +23,7 @@ export const CropHealth = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [healthAlerts, setHealthAlerts] = useState<HealthAlert[]>([]);
+  const [analysisProgress, setAnalysisProgress] = useState(0);
 
   const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -45,9 +49,18 @@ export const CropHealth = () => {
 
   const analyzeCropHealth = async (imageUrl: string) => {
     setIsAnalyzing(true);
+    setAnalysisProgress(0);
+    
+    // Simulate progress updates
+    const progressInterval = setInterval(() => {
+      setAnalysisProgress(prev => Math.min(prev + 10, 90));
+    }, 500);
+
     try {
       const results = await analyzeImage(imageUrl);
       setHealthAlerts(results);
+      setAnalysisProgress(100);
+      
       toast({
         title: "Analysis Complete",
         description: "Your crop has been analyzed successfully.",
@@ -60,6 +73,7 @@ export const CropHealth = () => {
         variant: "destructive",
       });
     } finally {
+      clearInterval(progressInterval);
       setIsAnalyzing(false);
     }
   };
@@ -67,8 +81,6 @@ export const CropHealth = () => {
   const handleCameraCapture = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-      // Here you would implement the camera capture UI
-      // For now, we'll just show a toast
       toast({
         title: "Camera Access",
         description: "Camera capture feature coming soon!",
@@ -86,7 +98,12 @@ export const CropHealth = () => {
   return (
     <Card className="transition-all duration-300 hover:shadow-lg">
       <CardHeader>
-        <CardTitle className="text-xl font-semibold">Crop Health Analysis</CardTitle>
+        <CardTitle className="text-xl font-semibold flex items-center gap-2">
+          Crop Health Analysis
+          <EnhancedTooltip 
+            content="Upload images of your crops for AI-powered health analysis and recommendations"
+          />
+        </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="flex gap-4">
@@ -112,8 +129,13 @@ export const CropHealth = () => {
           <div className="relative rounded-lg overflow-hidden">
             <img src={selectedImage} alt="Crop" className="w-full h-48 object-cover" />
             {isAnalyzing && (
-              <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-                <div className="text-white">Analyzing crop health...</div>
+              <div className="absolute inset-0 bg-black/50 backdrop-blur-sm flex flex-col items-center justify-center gap-4 p-4">
+                <LoadingAnimation type="plant" size="lg" text="Analyzing crop health..." />
+                <ProgressBar 
+                  value={analysisProgress} 
+                  className="w-full max-w-xs"
+                  label="Analysis Progress"
+                />
               </div>
             )}
           </div>
