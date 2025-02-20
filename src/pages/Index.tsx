@@ -2,6 +2,8 @@
 import { WeatherCard } from "@/components/WeatherCard";
 import { CropOverview } from "@/components/CropOverview";
 import { MarketPrices } from "@/components/MarketPrices";
+import { CropHealth } from "@/components/CropHealth";
+import { SoilMonitor } from "@/components/SoilMonitor";
 
 const Index = () => {
   // Sample data - in a real app, this would come from an API
@@ -28,8 +30,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from
--gray-50 to-white p-6">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white p-6">
       <div className="mx-auto max-w-7xl space-y-8">
         <header className="text-center">
           <h1 className="text-4xl font-bold text-gray-900 mb-2">FarmGenius</h1>
@@ -40,6 +41,8 @@ const Index = () => {
           <WeatherCard {...weatherData} />
           <CropOverview {...cropData} />
           <MarketPrices {...marketPrices} />
+          <CropHealth />
+          <SoilMonitor />
         </div>
       </div>
     </div>
