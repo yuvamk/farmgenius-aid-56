@@ -57,8 +57,8 @@ export const WeatherForecast = ({ location }: WeatherForecastProps) => {
         <CardTitle>7-Day Forecast</CardTitle>
       </CardHeader>
       <CardContent>
-        <ScrollArea className="w-full" orientation="horizontal">
-          <div className="flex gap-6 pb-4 min-w-max">
+        <ScrollArea className="w-full pb-4">
+          <div className="flex gap-6 min-w-max">
             {forecast?.map((day, index) => (
               <div
                 key={index}
