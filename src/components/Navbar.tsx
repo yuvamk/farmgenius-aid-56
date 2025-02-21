@@ -1,5 +1,6 @@
 
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Menu, X, Search, Globe } from "lucide-react";
 import { Button } from "./ui/button";
 import {
@@ -16,35 +17,37 @@ export const Navbar = () => {
 
   const languages = ['English', 'Español', 'हिंदी', '中文'];
 
+  const navItems = [
+    { href: "/", label: "Home", tooltip: "Back to homepage" },
+    { href: "/weather-forecast", label: "Weather Forecast", tooltip: "Check weather conditions" },
+    { href: "/crop-disease", label: "Crop Disease", tooltip: "AI-powered disease detection" },
+    { href: "/pest-management", label: "Pest Management", tooltip: "Smart pest control" },
+    { href: "/market-prices", label: "Market Prices", tooltip: "Real-time market data" },
+    { href: "/contact", label: "Contact", tooltip: "Get in touch with us" },
+  ];
+
   return (
     <nav className="fixed top-0 w-full bg-gradient-to-b from-background/95 to-background/80 backdrop-blur-sm z-50 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex-shrink-0 flex items-center">
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent transition-transform hover:scale-105 duration-300">
-              FarmGenius
-            </h1>
+            <Link to="/">
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent transition-transform hover:scale-105 duration-300">
+                FarmGenius
+              </h1>
+            </Link>
           </div>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             <TooltipProvider>
-              {[
-                { href: "/", label: "Home", tooltip: "Back to homepage" },
-                { href: "#features", label: "Features", tooltip: "Explore our features" },
-                { href: "/weather-forecast", label: "Weather Forecast", tooltip: "Check weather conditions" },
-                { href: "#disease", label: "Crop Disease", tooltip: "AI-powered disease detection" },
-                { href: "#pests", label: "Pest Management", tooltip: "Smart pest control" },
-                { href: "#market", label: "Market Prices", tooltip: "Real-time market data" },
-                { href: "#sustainability", label: "Sustainability", tooltip: "Eco-friendly practices" },
-                { href: "#contact", label: "Contact", tooltip: "Get in touch with us" },
-              ].map(({ href, label, tooltip }) => (
+              {navItems.map(({ href, label, tooltip }) => (
                 <Tooltip key={label}>
                   <TooltipTrigger asChild>
-                    <a href={href} className="nav-link text-sm font-medium">
+                    <Link to={href} className="nav-link text-sm font-medium">
                       {label}
-                    </a>
+                    </Link>
                   </TooltipTrigger>
                   <TooltipContent>
                     <p>{tooltip}</p>
@@ -99,12 +102,14 @@ export const Navbar = () => {
               </Button>
             </div>
 
-            <Button 
-              variant="outline" 
-              className="hover:bg-primary/5 border-gray-200"
-            >
-              Sign In
-            </Button>
+            <Link to="/sign-in">
+              <Button 
+                variant="outline" 
+                className="hover:bg-primary/5 border-gray-200"
+              >
+                Sign In
+              </Button>
+            </Link>
             <Button 
               className="bg-primary hover:bg-primary/90 shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105"
             >
@@ -130,23 +135,15 @@ export const Navbar = () => {
       {isMenuOpen && (
         <div className="md:hidden bg-background/95 backdrop-blur-sm border-t border-gray-100 animate-slideIn">
           <div className="px-4 pt-2 pb-3 space-y-3">
-            {[
-              { href: "#", label: "Home" },
-              { href: "#features", label: "Features" },
-              { href: "#weather", label: "Weather Forecast" },
-              { href: "#disease", label: "Crop Disease" },
-              { href: "#pests", label: "Pest Management" },
-              { href: "#market", label: "Market Prices" },
-              { href: "#sustainability", label: "Sustainability" },
-              { href: "#contact", label: "Contact" },
-            ].map(({ href, label }) => (
-              <a
+            {navItems.map(({ href, label }) => (
+              <Link
                 key={label}
-                href={href}
+                to={href}
                 className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-primary/5 hover:text-primary transition-colors"
+                onClick={() => setIsMenuOpen(false)}
               >
                 {label}
-              </a>
+              </Link>
             ))}
             
             <div className="px-3 py-2">
@@ -170,7 +167,9 @@ export const Navbar = () => {
             </div>
 
             <div className="pt-4 space-y-2 px-3">
-              <Button className="w-full" variant="outline">Sign In</Button>
+              <Link to="/sign-in">
+                <Button className="w-full" variant="outline">Sign In</Button>
+              </Link>
               <Button className="w-full bg-primary hover:bg-primary/90 shadow-md">Get Started</Button>
             </div>
           </div>
