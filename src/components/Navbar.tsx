@@ -31,9 +31,9 @@ export const Navbar = () => {
           <div className="hidden md:flex items-center space-x-8">
             <TooltipProvider>
               {[
-                { href: "#", label: "Home", tooltip: "Back to homepage" },
+                { href: "/", label: "Home", tooltip: "Back to homepage" },
                 { href: "#features", label: "Features", tooltip: "Explore our features" },
-                { href: "#weather", label: "Weather Forecast", tooltip: "Check weather conditions" },
+                { href: "/weather-forecast", label: "Weather Forecast", tooltip: "Check weather conditions" },
                 { href: "#disease", label: "Crop Disease", tooltip: "AI-powered disease detection" },
                 { href: "#pests", label: "Pest Management", tooltip: "Smart pest control" },
                 { href: "#market", label: "Market Prices", tooltip: "Real-time market data" },
