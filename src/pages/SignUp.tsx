@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Navbar } from "@/components/Navbar";
@@ -172,12 +171,16 @@ const SignUp = () => {
                       </label>
                       <div className="relative">
                         <Sprout className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                        <Select placeholder="Select your primary crops">
+                        <select
+                          id="cropTypes"
+                          className="flex h-10 w-full rounded-md border border-input bg-background pl-10 pr-3 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                        >
+                          <option value="">Select your primary crops</option>
                           <option value="wheat">Wheat</option>
                           <option value="corn">Corn</option>
                           <option value="rice">Rice</option>
                           <option value="soybeans">Soybeans</option>
-                        </Select>
+                        </select>
                       </div>
                     </div>
 
