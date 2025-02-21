@@ -7,6 +7,8 @@ import { SoilMonitor } from "@/components/SoilMonitor";
 import { Navbar } from "@/components/Navbar";
 import { HeroSection } from "@/components/HeroSection";
 import { FeaturesSection } from "@/components/FeaturesSection";
+import { NewsSection } from "@/components/news/NewsSection";
+import { SchemesSection } from "@/components/schemes/SchemesSection";
 import { SustainabilitySection } from "@/components/SustainabilitySection";
 import { Footer } from "@/components/Footer";
 
@@ -53,6 +55,8 @@ const Index = () => {
         </div>
       </div>
 
+      <NewsSection />
+      <SchemesSection />
       <SustainabilitySection />
       <Footer />
     </div>
