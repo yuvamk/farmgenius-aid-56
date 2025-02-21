@@ -11,6 +11,7 @@ import PestManagement from "./pages/PestManagement";
 import MarketPrices from "./pages/MarketPrices";
 import Contact from "./pages/Contact";
 import SignIn from "./pages/SignIn";
+import SignUp from "./pages/SignUp";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -29,6 +30,7 @@ const App = () => (
           <Route path="/market-prices" element={<MarketPrices />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/sign-in" element={<SignIn />} />
+          <Route path="/sign-up" element={<SignUp />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
