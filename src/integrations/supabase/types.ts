@@ -9,6 +9,53 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      farm_settings: {
+        Row: {
+          created_at: string
+          harvest_date: string | null
+          id: string
+          irrigation_schedule: string | null
+          market_price_alerts: boolean | null
+          notifications: boolean | null
+          soil_moisture_threshold: number | null
+          updated_at: string
+          user_id: string
+          weather_alerts: boolean | null
+        }
+        Insert: {
+          created_at?: string
+          harvest_date?: string | null
+          id?: string
+          irrigation_schedule?: string | null
+          market_price_alerts?: boolean | null
+          notifications?: boolean | null
+          soil_moisture_threshold?: number | null
+          updated_at?: string
+          user_id: string
+          weather_alerts?: boolean | null
+        }
+        Update: {
+          created_at?: string
+          harvest_date?: string | null
+          id?: string
+          irrigation_schedule?: string | null
+          market_price_alerts?: boolean | null
+          notifications?: boolean | null
+          soil_moisture_threshold?: number | null
+          updated_at?: string
+          user_id?: string
+          weather_alerts?: boolean | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "farm_settings_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           crop_type: string | null
