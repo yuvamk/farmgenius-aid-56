@@ -13,6 +13,8 @@ import MarketPrices from "./pages/MarketPrices";
 import Contact from "./pages/Contact";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
+import Profile from "./pages/Profile";
+import FarmSettings from "./pages/FarmSettings";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -33,6 +35,8 @@ const App = () => (
             <Route path="/contact" element={<Contact />} />
             <Route path="/sign-in" element={<SignIn />} />
             <Route path="/sign-up" element={<SignUp />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/farm-settings" element={<FarmSettings />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </TooltipProvider>

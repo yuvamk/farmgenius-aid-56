@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Menu, X, Search, Globe } from "lucide-react";
@@ -40,6 +39,16 @@ export const Navbar = () => {
 
   const handleSignOut = async () => {
     await signOut();
+  };
+
+  const handleProfileClick = () => {
+    navigate('/profile');
+    setIsMenuOpen(false);
+  };
+
+  const handleFarmSettingsClick = () => {
+    navigate('/farm-settings');
+    setIsMenuOpen(false);
   };
 
   const getInitials = (name: string) => {
@@ -146,10 +155,10 @@ export const Navbar = () => {
                     </div>
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleProfileClick}>
                     Profile
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleFarmSettingsClick}>
                     Farm Settings
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
