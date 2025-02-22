@@ -10,13 +10,24 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
 import { Eye, EyeOff, Lock, Mail, User, MapPin, Sprout } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { supabase } from "@/lib/supabase";
 
 const SignUp = () => {
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [password, setPassword] = useState("");
   const [passwordStrength, setPasswordStrength] = useState(0);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    location: "",
+    cropType: "",
+    farmSize: "",
+  });
 
   const calculatePasswordStrength = (pass: string) => {
     let strength = 0;
@@ -47,7 +58,7 @@ const SignUp = () => {
     return "bg-green-500";
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!agreedToTerms) {
       toast({
@@ -57,10 +68,50 @@ const SignUp = () => {
       });
       return;
     }
-    toast({
-      title: "Account Created",
-      description: "Welcome to FarmGenius! Please verify your email to continue.",
-    });
+
+    setIsLoading(true);
+
+    try {
+      const { error: signUpError, data } = await supabase.auth.signUp({
+        email: formData.email,
+        password: password,
+        options: {
+          data: {
+            name: formData.name,
+          },
+        },
+      });
+
+      if (signUpError) throw signUpError;
+
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .update({
+          name: formData.name,
+          email: formData.email,
+          location: formData.location,
+          crop_type: formData.cropType,
+          farm_size: formData.farmSize,
+        })
+        .eq('id', data.user?.id);
+
+      if (profileError) throw profileError;
+
+      toast({
+        title: "Account Created",
+        description: "Welcome to FarmGenius! You can now sign in.",
+      });
+
+      navigate('/sign-in');
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -78,7 +129,6 @@ const SignUp = () => {
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid gap-6 md:grid-cols-2">
-                  {/* Personal Information */}
                   <div className="space-y-4">
                     <div className="space-y-2">
                       <label htmlFor="name" className="text-sm font-medium">
@@ -91,6 +141,9 @@ const SignUp = () => {
                           placeholder="John Doe"
                           className="pl-10"
                           required
+                          value={formData.name}
+                          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                          disabled={isLoading}
                         />
                       </div>
                     </div>
@@ -107,6 +160,9 @@ const SignUp = () => {
                           placeholder="you@example.com"
                           className="pl-10"
                           required
+                          value={formData.email}
+                          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                          disabled={isLoading}
                         />
                       </div>
                     </div>
@@ -125,6 +181,7 @@ const SignUp = () => {
                           placeholder="Create a password"
                           className="pl-10"
                           required
+                          disabled={isLoading}
                         />
                         <Button
                           type="button"
@@ -132,6 +189,7 @@ const SignUp = () => {
                           size="icon"
                           className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
                           onClick={() => setShowPassword(!showPassword)}
+                          disabled={isLoading}
                         >
                           {showPassword ? (
                             <EyeOff className="h-4 w-4 text-muted-foreground" />
@@ -149,7 +207,6 @@ const SignUp = () => {
                     </div>
                   </div>
 
-                  {/* Farm Information */}
                   <div className="space-y-4">
                     <div className="space-y-2">
                       <label htmlFor="location" className="text-sm font-medium">
@@ -161,6 +218,9 @@ const SignUp = () => {
                           id="location"
                           placeholder="Enter your farm location"
                           className="pl-10"
+                          value={formData.location}
+                          onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                          disabled={isLoading}
                         />
                       </div>
                     </div>
@@ -174,6 +234,9 @@ const SignUp = () => {
                         <select
                           id="cropTypes"
                           className="flex h-10 w-full rounded-md border border-input bg-background pl-10 pr-3 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                          value={formData.cropType}
+                          onChange={(e) => setFormData({ ...formData, cropType: e.target.value })}
+                          disabled={isLoading}
                         >
                           <option value="">Select your primary crops</option>
                           <option value="wheat">Wheat</option>
@@ -193,6 +256,9 @@ const SignUp = () => {
                         type="number"
                         placeholder="Enter farm size"
                         min="0"
+                        value={formData.farmSize}
+                        onChange={(e) => setFormData({ ...formData, farmSize: e.target.value })}
+                        disabled={isLoading}
                       />
                     </div>
                   </div>
@@ -204,6 +270,7 @@ const SignUp = () => {
                       id="terms"
                       checked={agreedToTerms}
                       onCheckedChange={(checked: boolean) => setAgreedToTerms(checked)}
+                      disabled={isLoading}
                     />
                     <label
                       htmlFor="terms"
@@ -222,9 +289,9 @@ const SignUp = () => {
                   <Button 
                     type="submit" 
                     className="w-full transition-all hover:scale-105"
-                    disabled={!agreedToTerms}
+                    disabled={!agreedToTerms || isLoading}
                   >
-                    Create Account
+                    {isLoading ? "Creating Account..." : "Create Account"}
                   </Button>
 
                   <p className="text-center text-sm text-muted-foreground">
