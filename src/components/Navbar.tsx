@@ -1,5 +1,6 @@
+
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Menu, X, Search, Globe } from "lucide-react";
 import { Button } from "./ui/button";
 import {
@@ -24,6 +25,7 @@ export const Navbar = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState('English');
   const { user, profile, signOut } = useUser();
+  const navigate = useNavigate();
 
   const languages = ['English', 'Español', 'हिंदी', '中文'];
 
