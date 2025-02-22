@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Menu, X, Search, Globe } from "lucide-react";
@@ -9,11 +8,22 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "./ui/tooltip";
+import { useUser } from "@/contexts/UserContext";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState('English');
+  const { user, profile, signOut } = useUser();
 
   const languages = ['English', 'Español', 'हिंदी', '中文'];
 
@@ -25,6 +35,18 @@ export const Navbar = () => {
     { href: "/market-prices", label: "Market Prices", tooltip: "Real-time market data" },
     { href: "/contact", label: "Contact", tooltip: "Get in touch with us" },
   ];
+
+  const handleSignOut = async () => {
+    await signOut();
+  };
+
+  const getInitials = (name: string) => {
+    return name
+      ?.split(' ')
+      .map(word => word[0])
+      .join('')
+      .toUpperCase() || '?';
+  };
 
   return (
     <nav className="fixed top-0 w-full bg-gradient-to-b from-background/95 to-background/80 backdrop-blur-sm z-50 shadow-sm">
@@ -102,19 +124,57 @@ export const Navbar = () => {
               </Button>
             </div>
 
-            <Link to="/sign-in">
-              <Button 
-                variant="outline" 
-                className="hover:bg-primary/5 border-gray-200"
-              >
-                Sign In
-              </Button>
-            </Link>
-            <Button 
-              className="bg-primary hover:bg-primary/90 shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105"
-            >
-              Get Started
-            </Button>
+            {user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                    <Avatar className="h-8 w-8">
+                      <AvatarImage src={user.user_metadata.avatar_url} alt={profile?.name || user.email} />
+                      <AvatarFallback>{getInitials(profile?.name || user.email)}</AvatarFallback>
+                    </Avatar>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56" align="end" forceMount>
+                  <DropdownMenuLabel className="font-normal">
+                    <div className="flex flex-col space-y-1">
+                      <p className="text-sm font-medium leading-none">{profile?.name || user.email}</p>
+                      <p className="text-xs leading-none text-muted-foreground">
+                        {user.email}
+                      </p>
+                    </div>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem>
+                    Profile
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    Farm Settings
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={handleSignOut}>
+                    Log out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <>
+                <Link to="/sign-in">
+                  <Button 
+                    variant="outline" 
+                    className="hover:bg-primary/5 border-gray-200"
+                  >
+                    Sign In
+                  </Button>
+                </Link>
+                <Link to="/sign-up">
+                  <Button 
+                    className="bg-primary hover:bg-primary/90 shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105"
+                  >
+                    Get Started
+                  </Button>
+                </Link>
+              </>
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -146,32 +206,46 @@ export const Navbar = () => {
               </Link>
             ))}
             
-            <div className="px-3 py-2">
-              <input
-                type="text"
-                placeholder="Search..."
-                className="w-full px-4 py-2 rounded-md border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/20 bg-background"
-              />
-            </div>
-            
-            <div className="px-3 py-2">
-              <select 
-                value={selectedLanguage}
-                onChange={(e) => setSelectedLanguage(e.target.value)}
-                className="w-full px-4 py-2 rounded-md border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/20 bg-background"
-              >
-                {languages.map(lang => (
-                  <option key={lang} value={lang}>{lang}</option>
-                ))}
-              </select>
-            </div>
-
-            <div className="pt-4 space-y-2 px-3">
-              <Link to="/sign-in">
-                <Button className="w-full" variant="outline">Sign In</Button>
-              </Link>
-              <Button className="w-full bg-primary hover:bg-primary/90 shadow-md">Get Started</Button>
-            </div>
+            {user ? (
+              <div className="px-3 py-2">
+                <div className="flex items-center space-x-3 mb-3">
+                  <Avatar className="h-8 w-8">
+                    <AvatarImage src={user.user_metadata.avatar_url} alt={profile?.name || user.email} />
+                    <AvatarFallback>{getInitials(profile?.name || user.email)}</AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <p className="text-sm font-medium">{profile?.name || user.email}</p>
+                    <p className="text-xs text-muted-foreground">{user.email}</p>
+                  </div>
+                </div>
+                <Button 
+                  variant="outline" 
+                  className="w-full mb-2"
+                  onClick={() => {
+                    setIsMenuOpen(false);
+                    navigate('/profile');
+                  }}
+                >
+                  Profile
+                </Button>
+                <Button 
+                  variant="outline" 
+                  className="w-full"
+                  onClick={handleSignOut}
+                >
+                  Log out
+                </Button>
+              </div>
+            ) : (
+              <div className="px-3 py-2">
+                <Link to="/sign-in" onClick={() => setIsMenuOpen(false)}>
+                  <Button className="w-full mb-2" variant="outline">Sign In</Button>
+                </Link>
+                <Link to="/sign-up" onClick={() => setIsMenuOpen(false)}>
+                  <Button className="w-full bg-primary">Get Started</Button>
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       )}
