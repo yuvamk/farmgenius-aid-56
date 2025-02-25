@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Cloud, CloudDrizzle, CloudRain, Sun, AlertTriangle } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/lib/supabase";
 
 interface WeatherForecastProps {
   location: {
@@ -22,19 +23,28 @@ interface ForecastDay {
 }
 
 export const WeatherForecast = ({ location }: WeatherForecastProps) => {
-  const { data: forecast } = useQuery({
+  const { data: forecast, isError } = useQuery({
     queryKey: ["forecast", location],
     queryFn: async () => {
-      // Replace with actual API call to OpenWeatherMap
-      return Array.from({ length: 7 }, (_, i) => ({
-        date: new Date(Date.now() + i * 24 * 60 * 60 * 1000).toLocaleDateString(),
-        temperature: {
-          min: Math.round(15 + Math.random() * 5),
-          max: Math.round(25 + Math.random() * 5),
-        },
-        condition: ["Clear", "Rain", "Cloudy"][Math.floor(Math.random() * 3)],
-        precipitation: Math.round(Math.random() * 100),
-      }));
+      const { data, error } = await supabase.functions.invoke('get-weather', {
+        body: JSON.stringify(location)
+      });
+
+      if (error) throw error;
+
+      // Process the 7-day forecast data
+      return data.forecast.list
+        .filter((_: any, index: number) => index % 8 === 0) // Get one reading per day
+        .slice(0, 7) // Get 7 days
+        .map((day: any) => ({
+          date: new Date(day.dt * 1000).toLocaleDateString(),
+          temperature: {
+            min: Math.round(day.main.temp_min),
+            max: Math.round(day.main.temp_max),
+          },
+          condition: day.weather[0].main,
+          precipitation: Math.round(day.pop * 100), // Probability of precipitation
+        }));
     },
   });
 
@@ -42,7 +52,7 @@ export const WeatherForecast = ({ location }: WeatherForecastProps) => {
     switch (condition.toLowerCase()) {
       case "rain":
         return <CloudRain className="h-8 w-8 text-primary" />;
-      case "cloudy":
+      case "clouds":
         return <Cloud className="h-8 w-8 text-primary" />;
       case "drizzle":
         return <CloudDrizzle className="h-8 w-8 text-primary" />;
@@ -50,6 +60,19 @@ export const WeatherForecast = ({ location }: WeatherForecastProps) => {
         return <Sun className="h-8 w-8 text-primary" />;
     }
   };
+
+  if (isError) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>Weather Forecast Error</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-destructive">Unable to load weather forecast data.</p>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <Card>
@@ -59,7 +82,7 @@ export const WeatherForecast = ({ location }: WeatherForecastProps) => {
       <CardContent>
         <ScrollArea className="w-full pb-4">
           <div className="flex gap-6 min-w-max">
-            {forecast?.map((day, index) => (
+            {forecast?.map((day: ForecastDay, index: number) => (
               <div
                 key={index}
                 className="flex flex-col items-center p-4 rounded-lg hover:bg-accent transition-colors"
